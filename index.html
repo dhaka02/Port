@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunny Dhaka · Software Engineer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --camera-body: #1a1a1a;
+            --leather: #2d2d2d;
+            --paper: #f4f1ea;
+            --leica-red: #b32428;
+            --text-main: #111;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--paper);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* Film Grain Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.4;
+        }
+
+        /* Layout Structure */
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .block {
+            padding: 60px 8vw;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 35vh;
+            border-bottom: 1px solid rgba(17, 17, 17, 0.1);
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        .align-right {
+            align-self: flex-end;
+            width: 50%;
+            border-left: 1px dashed rgba(17, 17, 17, 0.2);
+            padding-left: 40px;
+        }
+
+        .align-left {
+            align-self: flex-start;
+            width: 50%;
+            border-right: 1px dashed rgba(17, 17, 17, 0.2);
+            padding-right: 40px;
+            text-align: right;
+        }
+
+        /* Empty Space Decorations (Minimal Text) */
+        .film-edge {
+            position: absolute;
+            top: 50%;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(17, 17, 17, 0.25);
+            white-space: nowrap;
+        }
+        
+        .film-edge-left {
+            left: 4%;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: left center;
+        }
+
+        .film-edge-right {
+            right: 4%;
+            transform: translateY(-50%) rotate(90deg);
+            transform-origin: right center;
+        }
+
+        /* Retro Camera Elements */
+        .camera-label {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--leica-red);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .align-left .camera-label { justify-content: flex-end; }
+
+        .red-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--leica-red);
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-family: 'Courier Prime', monospace;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: 0.9;
+            margin-bottom: 16px;
+        }
+
+        h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            max-width: 500px;
+        }
+
+        .align-left p { margin-left: auto; }
+
+        /* Viewfinder Corners */
+        .viewfinder {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            padding: 20px;
+        }
+        
+        .vf-corner {
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--text-main);
+        }
+        .top-left { border-bottom: none; border-right: none; align-self: flex-start; }
+        .top-right { border-bottom: none; border-left: none; align-self: flex-start; }
+        .bottom-left { border-top: none; border-right: none; align-self: flex-end; }
+        .bottom-right { border-top: none; border-left: none; align-self: flex-end; }
+
+        /* Specific Section Styles */
+        .intro {
+            background: var(--camera-body);
+            color: var(--paper);
+            min-height: 100vh;
+            text-align: center;
+            align-items: center;
+            border-bottom: none;
+        }
+
+        .intro .camera-label {
+            color: var(--paper);
+            justify-content: center;
+            opacity: 0.8;
+        }
+
+        .intro h1 { color: var(--paper); }
+
+        .intro p {
+            margin: 0 auto 40px auto;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(244, 241, 234, 0.7);
+        }
+
+        /* Iconic Graphic (Eiffel Tower) */
+        .iconic-graphic {
+            margin: 40px auto;
+            position: relative;
+            width: 160px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .iconic-graphic::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(244, 241, 234, 0.2);
+            border-radius: 50%;
+            top: 0;
+            left: 0;
+        }
+
+        .iconic-graphic svg {
+            width: 100px;
+            height: 140px;
+            opacity: 0.9;
+            z-index: 2;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .contact-links a {
+            color: var(--paper);
+            text-decoration: none;
+            font-family: 'Courier Prime', monospace;
+            font-weight: 700;
+            border: 2px solid var(--paper);
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+
+        .contact-links a:hover {
+            background: var(--paper);
+            color: var(--camera-body);
+        }
+
+        .footer {
+            background: var(--camera-body);
+            color: var(--paper);
+            text-align: center;
+            border-bottom: none;
+        }
+        
+        .footer .camera-label { color: var(--paper); justify-content: center; opacity: 0.8; }
+        .footer h2 { color: var(--paper); }
+        .footer p { color: var(--paper); margin: 0 auto; opacity: 0.7; }
+        
+        .footer .red-dot { background: var(--leica-red); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .align-right, .align-left {
+                width: 100%;
+                border: none;
+                padding: 40px 0;
+                text-align: left;
+            }
+            .align-left .camera-label { justify-content: flex-start; }
+            .align-left p { margin-left: 0; }
+            .film-edge { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- BLOCK 1: FULL WIDTH (Intro) -->
+    <header class="block full-width intro">
+        <div class="viewfinder">
+            <div class="vf-corner top-left" style="border-color: var(--paper);"></div>
+            <div class="vf-corner top-right" style="border-color: var(--paper);"></div>
+            <div class="vf-corner bottom-left" style="border-color: var(--paper);"></div>
+            <div class="vf-corner bottom-right" style="border-color: var(--paper);"></div>
+        </div>
+        
+        <div class="camera-label">
+            <span class="red-dot"></span> ISO 400 · f/2.8 · 1/125s
+        </div>
+        
+        <h1>Sunny Dhaka</h1>
+        <p>Software Engineer · Backend · AI · Python · Django · AWS</p>
+        
+        <div class="iconic-graphic">
+            <svg viewBox="0 0 100 140" fill="none" stroke="#f4f1ea" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                <!-- Main Outline -->
+                <path d="M50 5 L35 35 L20 80 L10 130 M50 5 L65 35 L80 80 L90 130" />
+                <!-- Platforms -->
+                <path d="M28 50 L72 50" />
+                <path d="M22 75 L78 75" />
+                <path d="M15 100 L85 100" />
+                <!-- Arches -->
+                <path d="M35 75 Q50 95 65 75" />
+                <!-- Crossbeams -->
+                <path d="M35 35 L65 35 M35 50 L65 50 M22 75 L78 75 M15 100 L78 100" />
+                <!-- Ground -->
+                <path d="M5 130 L95 130" />
+            </svg>
+        </div>
+        
+        <div class="contact-links">
+            <a href="mailto:sunny21429@gmail.com">EMAIL</a>
+            <a href="#">LINKEDIN</a>
+            <a href="#">GITHUB</a>
+            <a href="#">CODEFORCES</a>
+        </div>
+    </header>
+
+    <!-- BLOCK 2: RIGHT ONLY -->
+    <section class="block align-right">
+        <div class="film-edge film-edge-left">FRAME 01 · 35MM FILM</div>
+        <div class="camera-label"><span class="red-dot"></span> Software Engineer · Spark Eighteen</div>
+        <h2>Backend Architecture</h2>
+        <p>Strengthened internal access control systems and overhauled core APIs with rate limits and Redis caching for scalable architecture.</p>
+    </section>
+
+    <!-- BLOCK 3: LEFT ONLY -->
+    <section class="block align-left">
+        <div class="film-edge film-edge-right">FRAME 02 · 35MM FILM</div>
+        <div class="camera-label"><span class="red-dot"></span> Full-Stack Engineer · CIPD LAB</div>
+        <h2>AI & CI/CD Pipelines</h2>
+        <p>Engineered optimized REST APIs and spearheaded a LangChain RAG pipeline for an internal chatbot, while automating backend deployments.</p>
+    </section>
+
+    <!-- BLOCK 4: RIGHT ONLY -->
+    <section class="block align-right">
+        <div class="film-edge film-edge-left">FRAME 03 · 35MM FILM</div>
+        <div class="camera-label"><span class="red-dot"></span> Teaching Assistant · IIIT Delhi</div>
+        <h2>Mentorship</h2>
+        <p>Co-managed course operations and conducted weekly tutorials to reinforce core computer science curriculum concepts for students.</p>
+    </section>
+
+    <!-- BLOCK 5: LEFT ONLY -->
+    <section class="block align-left">
+        <div class="film-edge film-edge-right">FRAME 04 · 35MM FILM</div>
+        <div class="camera-label"><span class="red-dot"></span> Project · MovieFlow</div>
+        <h2>Secure API Systems</h2>
+        <p>Architected secure Django REST APIs with JWT authentication and optimized database performance using indexing and caching.</p>
+    </section>
+
+    <!-- BLOCK 6: RIGHT ONLY -->
+    <section class="block align-right">
+        <div class="film-edge film-edge-left">FRAME 05 · 35MM FILM</div>
+        <div class="camera-label"><span class="red-dot"></span> Project · DocuQuery</div>
+        <h2>RAG Optimization</h2>
+        <p>Engineered a LangChain RAG pipeline with semantic deduplication and relevance scoring for fast, accurate document querying.</p>
+    </section>
+
+    <!-- BLOCK 7: LEFT ONLY -->
+    <section class="block align-left">
+        <div class="film-edge film-edge-right">FRAME 06 · 35MM FILM</div>
+        <div class="camera-label"><span class="red-dot"></span> Education & Awards</div>
+        <h2>IIIT Delhi</h2>
+        <p>B.Tech in Computer Science. Algorithmic problem solver and active open-source contributor.</p>
+    </section>
+
+    <!-- BLOCK 8: FULL WIDTH (Footer) -->
+    <footer class="block full-width footer">
+        <div class="viewfinder">
+            <div class="vf-corner top-left" style="border-color: var(--paper);"></div>
+            <div class="vf-corner top-right" style="border-color: var(--paper);"></div>
+            <div class="vf-corner bottom-left" style="border-color: var(--paper);"></div>
+            <div class="vf-corner bottom-right" style="border-color: var(--paper);"></div>
+        </div>
+        
+        <div class="camera-label">
+            <span class="red-dot"></span> Let's Connect
+        </div>
+        
+        <h2>Ready to build.</h2>
+        <p style="margin-top: 20px;">sunny21429@gmail.com</p>
+        
+        <div class="contact-links">
+            <a href="mailto:sunny21429@gmail.com">EMAIL</a>
+            <a href="#">LINKEDIN</a>
+            <a href="#">GITHUB</a>
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>
